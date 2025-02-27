@@ -7,7 +7,7 @@ from telegram import Bot
 
 # إعداد التوكن والمعرف
 TOKEN = "7876105293:AAG6wsc8X7ifkNaPyrdCFNH5tW8Kln1fHyU"
-CHANNEL_ID = "@testbotseaf"
+CHANNEL_ID = "@jordangold"
 RAMADAN_START = datetime.date(2025, 3, 1)
 RAMADAN_DAYS = 30
 
