@@ -43,7 +43,7 @@ async def send_azkar():
     while True:
         azkar = random.choice(AZKAR_LIST)
         ramadan_msg = get_ramadan_message()
-        message = f"{azkar}\n\n{ramadan_msg}"
+        message = f"{azkar}\n\n{ramadan_msg}".encode('utf-16', 'surrogatepass').decode('utf-16')
         try:
             await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=telegram.constants.ParseMode.HTML)
         except Exception as e:
