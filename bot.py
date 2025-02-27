@@ -48,7 +48,7 @@ async def send_azkar():
             await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=telegram.constants.ParseMode.HTML)
         except Exception as e:
             logging.error(f"Error sending message: {e}")
-        await asyncio.sleep(3600)  # الانتظار لمدة ساعة
+        await asyncio.sleep(7200)  # الانتظار لمدة ساعة
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
