@@ -49,26 +49,18 @@ def get_ramadan_message():
 async def send_azkar():
     bot = Bot(token=TOKEN)
     
-    while True:
-        now = datetime.datetime.now(RIYADH_TZ)
-        target_time = now.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)  # منتصف الليل الرياض
-        seconds_until_midnight = (target_time - now).total_seconds()
+    for _ in range(8):  # إرسال 8 أذكار يوميًا
+        azkar = random.choice(AZKAR_LIST)
+        ramadan_msg = get_ramadan_message()
+        message = f"{azkar}\n\n{ramadan_msg}\n\n🌙 بوت SA Forex أذكار رمضان 🌙"
         
-        logging.info(f"النوم حتى بداية اليوم الجديد: {seconds_until_midnight} ثانية")
-        await asyncio.sleep(seconds_until_midnight)  # الانتظار حتى بداية اليوم
+        try:
+            await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=telegram.constants.ParseMode.HTML)
+            logging.info(f"تم إرسال الذكر: {message}")
+        except Exception as e:
+            logging.error(f"خطأ أثناء إرسال الرسالة: {e}")
 
-        for _ in range(8):  # إرسال 8 أذكار يوميًا
-            azkar = random.choice(AZKAR_LIST)
-            ramadan_msg = get_ramadan_message()
-            message = f"{azkar}\n\n{ramadan_msg}\n\n🌙 بوت SA Forex أذكار رمضان 🌙"
-            
-            try:
-                await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=telegram.constants.ParseMode.HTML)
-                logging.info(f"تم إرسال الذكر: {message}")
-            except Exception as e:
-                logging.error(f"خطأ أثناء إرسال الرسالة: {e}")
-
-            await asyncio.sleep(3 * 60 * 60)  # الانتظار 3 ساعات بين كل إرسال
+        await asyncio.sleep(3 * 60 * 60)  # الانتظار 3 ساعات بين كل إرسال
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
