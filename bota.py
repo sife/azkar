@@ -1,10 +1,9 @@
 import asyncio
 import logging
 import datetime
-import telegram
 import random
 import pytz
-from telegram import Bot
+from telegram import Bot, constants
 
 # إعداد التوكن والمعرف
 TOKEN = "7876105293:AAG6wsc8X7ifkNaPyrdCFNH5tW8Kln1fHyU"
@@ -49,19 +48,23 @@ def get_ramadan_message():
 async def send_azkar():
     bot = Bot(token=TOKEN)
     
-    for _ in range(8):  # إرسال 8 أذكار يوميًا
-        azkar = random.choice(AZKAR_LIST)
-        ramadan_msg = get_ramadan_message()
-        message = f"{azkar}\n\n{ramadan_msg}\n\n🌙 بوت SA Forex أذكار رمضان 🌙"
-        
+    while True:  # حلقة مستمرة لضمان استمرار تشغيل البوت
         try:
-            await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=telegram.constants.ParseMode.HTML)
+            azkar = random.choice(AZKAR_LIST)
+            ramadan_msg = get_ramadan_message()
+            message = f"{azkar}\n\n{ramadan_msg}\n\n🌙 بوت SA Forex أذكار رمضان 🌙"
+            
+            await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode=constants.ParseMode.HTML)
             logging.info(f"تم إرسال الذكر: {message}")
+
         except Exception as e:
             logging.error(f"خطأ أثناء إرسال الرسالة: {e}")
 
-        await asyncio.sleep(3 * 60 * 60)  # الانتظار 3 ساعات بين كل إرسال
+        await asyncio.sleep(14200)  # الانتظار ساعة بين كل إرسال
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    asyncio.run(send_azkar())
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+    loop = asyncio.get_event_loop()
+    loop.create_task(send_azkar())  # تشغيل المهمة في الخلفية
+    loop.run_forever()  # تشغيل مستمر للسكريبت
