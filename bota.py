@@ -34,17 +34,23 @@ AZKAR_LIST = [
     "🙏 اللهم اجعل لنا في هذا الشهر الكريم نصيبًا من الرحمة والمغفرة والعتق من النار 🙏"
 ]
 
+
+# ---------------------- دالة حساب الأيام ----------------------
 def get_ramadan_message():
     today = datetime.datetime.now(RIYADH_TZ).date()
     if today < RAMADAN_START:
         days_left = (RAMADAN_START - today).days
         return f"✨🌟 تبقى {days_left} يومًا على دخول شهر رمضان المبارك 🌟✨"
     elif RAMADAN_START <= today < RAMADAN_START + datetime.timedelta(days=RAMADAN_DAYS):
-        days_left = RAMADAN_DAYS - (today - RAMADAN_START).days
+        days_left = RAMADAN_DAYS - (today - RAMADAN_START).days - 1  # ✅ خصم يوم إضافي لحساب صحيح
+        if days_left < 0:  # إذا اليوم الأخير
+            days_left = 0
         return f"🌟✨ تبقى {days_left} يومًا على نهاية شهر رمضان المبارك ✨🌟"
     else:
         return "✨🌟 نسأل الله أن يتقبل منا ومنكم صالح الأعمال 🌟✨"
 
+
+# ---------------------- دالة إرسال الأذكار ----------------------
 async def send_azkar():
     bot = Bot(token=TOKEN)
     
@@ -58,10 +64,12 @@ async def send_azkar():
             logging.info(f"تم إرسال الذكر: {message}")
 
         except Exception as e:
-            logging.error(f"خطأ أثناء إرسال الرسالة: {e}")
+            logging.error(f"❌ خطأ أثناء إرسال الرسالة: {e}")
 
-        await asyncio.sleep(14200)  # الانتظار ساعة بين كل إرسال
+        await asyncio.sleep(14200)  # الانتظار (حوالي 4 ساعات) بين كل إرسال
 
+
+# ---------------------- تشغيل الكود ----------------------
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
